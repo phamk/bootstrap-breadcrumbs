@@ -10,12 +10,12 @@ from __future__ import unicode_literals
 import logging
 from inspect import ismethod
 
+from django import VERSION, template
+from django.conf import settings
+from django.db.models import Model
+from django.utils.encoding import smart_str
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
-from django.utils.encoding import smart_text
-from django.db.models import Model
-from django.conf import settings
-from django import template, VERSION
 from six import wraps
 
 if VERSION >= (3, 0):
@@ -24,10 +24,10 @@ else:
     from django.utils.translation import ugettext as _
 
 if VERSION >= (2, 0):
-    from django.urls import (reverse, resolve, NoReverseMatch, Resolver404)
+    from django.urls import NoReverseMatch, Resolver404, resolve, reverse
 else:
-    from django.core.urlresolvers import (reverse, resolve, NoReverseMatch,
-                                          Resolver404)
+    from django.core.urlresolvers import (NoReverseMatch, Resolver404, resolve,
+                                          reverse)
 
 logger = logging.getLogger(__name__)
 
@@ -148,7 +148,7 @@ def render_breadcrumbs(context, *args):
                               kwargs=view_kwargs, current_app=current_app)
             except NoReverseMatch:
                 url = viewname
-        links.append((url, smart_text(label) if label else label))
+        links.append((url, smart_str(label) if label else label))
 
     if not links:
         return ''
